@@ -44,10 +44,6 @@ def verusidentity(identity):
     Queries RPC to check if identity exists and returns information
     '''
     #Check identity formatted correctly and fix any standard errors for "@" placement
-    if identity[0] == '@':
-        identity = identity.split('@')[1] + '@'
-    elif len(identity.split('@')) != 2:
-        identity += '@'
     result = vrpc.verusquery("getidentity", [identity], rpcid="getidentity")
     return result
 
