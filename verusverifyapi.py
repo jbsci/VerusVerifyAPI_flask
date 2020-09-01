@@ -58,7 +58,7 @@ def verusidentity(identity):
 def filehash(FileHash):
     keys = list(request.args.keys())
     if 'Signature' and 'Signer' not in keys:
-        return '{"error" : 1, "error_text":"Missing Signature and/or Signer"}'
+        return '{"error" : 1, "error_detail":"Missing Signature and/or Signer"}'
     signature   =   '+'.join(request.args['Signature'].split(' '))
     signer  =   request.args['Signer']
     if FileHash is not None:
@@ -69,13 +69,13 @@ def filehash(FileHash):
         else:
             return '{"valid" : false}'
     else:
-        return '{"error" : 2, error_text : "Missing Filehash"}'
+        return '{"error" : 2, "error_detail" : "No filehash specified"}'
 
 @app.route("/message=<Message>", methods=["GET", "POST"]) 
 def message(Message):
     keys = list(request.args.keys())
     if 'Signature' and 'Signer' not in keys:
-        return '{"error" : 1, "error_text":"Missing Signature and/or Signer"}'
+        return '{"error" : 1, "error_detail":"Missing Signature and/or Signer"}'
     signature   =   '+'.join(request.args['Signature'].split(' '))
     signer  =   request.args['Signer']
     if Message is not None:
@@ -86,7 +86,7 @@ def message(Message):
         else:
             return '{"valid" : false}'
     else:
-        return '{"error" : 2, error_text : "Missing Message"}'
+        return '{"error" : 2, "error_detail" : "No message specified"}'
 
 @app.route("/getid=<verusid>", methods=["GET", "POST"])
 def getid(verusid):
