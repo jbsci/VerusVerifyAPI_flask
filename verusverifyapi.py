@@ -69,7 +69,7 @@ def filehash(FileHash):
         else:
             return '{"valid" : false}'
     else:
-        return '{"error" : 2, error_text : "Missing Filehash"}'
+        return '{"error" : 2, "error_text" : "No filehash specified"}'
 
 @app.route("/message=<Message>", methods=["GET", "POST"]) 
 def message(Message):
@@ -86,7 +86,7 @@ def message(Message):
         else:
             return '{"valid" : false}'
     else:
-        return '{"error" : 2, error_text : "Missing Message"}'
+        return '{"error" : 2, "error_text" : "No message specified"}'
 
 @app.route("/getid=<verusid>", methods=["GET", "POST"])
 def getid(verusid):
