@@ -43,7 +43,6 @@ def verusidentity(identity):
     '''
     Queries RPC to check if identity exists and returns information
     '''
-    #Check identity formatted correctly and fix any standard errors for "@" placement
     result = vrpc.verusquery("getidentity", [identity], rpcid="getidentity")
     return result
 
