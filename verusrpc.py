@@ -27,7 +27,7 @@ def rpcdetails(conffile = confpath):
         print("ERROR: Specify a configuration file with RPC login information")
     return { line.split('=')[0] : line.split('=')[1].strip('\n') for line in open(conffile, 'r')}
 
-def verusquery(method, params, url, rpcid= " ", rpcinfo=rpcdetails()):
+def verusquery(method, params, rpcid= " ", rpcinfo=rpcdetails()):
     '''
     Function to query the Verus RPC client. Builds payload based on method and parameters
 
@@ -37,5 +37,5 @@ def verusquery(method, params, url, rpcid= " ", rpcinfo=rpcdetails()):
     if type(params) != list:
         print("ERROR: Params must be given as a list")
     payload = {"jsonrpc" : "1.0", "id": rpcid , "method" : method, "params": params}
-    response = requests.post(url, json=payload, headers={'content-type': 'text/plain;'}, auth=HTTPBasicAuth(rpcinfo['rpcuser'], rpcinfo['rpcpassword'])).json()
+    response = requests.post('http://localhost:{}'.format(rpcinfo['rpcport']), json=payload, headers={'content-type': 'text/plain;'}, auth=HTTPBasicAuth(rpcinfo['rpcuser'], rpcinfo['rpcpassword'])).json()
     return response

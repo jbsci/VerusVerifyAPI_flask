@@ -1,19 +1,25 @@
 #!/usr/bin/env python
 
 '''
-Written 2020 by Jonathan Barnes <jonathan@jbarnes.dev>
+Written 2020 by Jonathan Barnes <jonathan@jbsci.org>
 
 Basic Functionality:
+
+    localhost:5000/$query=$queryinfo?Signer=$signer&Signature=$signature
+
+    example:
+
+    localhost:5000/message=This is a test message?Signer=jbsci@&Signature=Af+4EQABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM
     
-    */hash?FileHash=XXXX&Signature=YYYYYY&Signer=ZZZZZZ -> {valid:T|F}
 
 Requires verusrpc.py, needs some setup for where to locate the rpc information before running
 '''
 
 #-# Imports #-#
 
-import os,sys, argparse
+import os,sys
 import socket
+import json
 import verusrpc as vrpc
 from flask import Flask, request, url_for
 from urllib.parse import unquote
@@ -21,40 +27,75 @@ from flask_api import FlaskAPI, status, exceptions
 
 #--# Definitions #--#
 
-rpc_port = 27486
-url = 'http://localhost:{:d}'.format(rpc_port)
 app = FlaskAPI(__name__)
 
 #---# Functions #---#
 
-def verusverify(thing_to_verify, signer, signature, method, rpcid, url=url):
+def verusverify(thing_to_verify, signer, signature, method, rpcid):
     '''
     Uses given rpc method to perform verification of a File (verifyfile), Filehash (verifyhash), 
     or message (verifymessage)
     '''
-    result = vrpc.verusquery(method, [signer, signature, thing_to_verify], url, rpcid=rpcid)
+    result = vrpc.verusquery(method, [signer, signature, thing_to_verify], rpcid=rpcid)
     return result
 
-@app.route("/hash", methods=["GET", "POST"]) 
-def verifyapi():
+def verusidentity(identity):
+    '''
+    Queries RPC to check if identity exists and returns information
+    '''
+    #Check identity formatted correctly and fix any standard errors for "@" placement
+    if identity[0] == '@':
+        identity = identity.split('@')[1] + '@'
+    elif len(identity.split('@')) != 2:
+        identity += '@'
+    result = vrpc.verusquery("getidentity", [identity], rpcid="getidentity")
+    return result
+
+
+#----# API #----#
+
+@app.route("/filehash=<FileHash>", methods=["GET", "POST"]) 
+def filehash(FileHash):
     keys = list(request.args.keys())
     if 'Signature' and 'Signer' not in keys:
-        return 'ERROR: Signature and Signer required'
+        return '{"error" : 1, "error_text":"Missing Signature and/or Signer"}'
     signature   =   '+'.join(request.args['Signature'].split(' '))
     signer  =   request.args['Signer']
-    if 'Filehash' in keys:
-        fh = request.args['Filehash']
-        return str(verusverify(fh, signer, signature, 'verifyhash', rpcid='verifyhash'))
-    elif 'Message' in keys:
-        message = request.args['Message']
-        return str(verusverify(message, signer, signature, 'verifymessage', rpcid='verifyfilehash'))
-    elif 'File' in keys:
-        Filebin = request.args['File']
-        return str(verusverify(Filebin, signer, signature, 'verifyfile', rpcid='verifyfile'))
+    if FileHash is not None:
+        fh = FileHash
+        result = verusverify(fh, signer, signature, 'verifyhash', rpcid='verifyhash')['result']
+        if result:
+            return '{"valid" : true}'
+        else:
+            return '{"valid" : false}'
     else:
-        return "ERROR: Please specify Filehash, Message, or File binary"
+        return '{"error" : 2, error_text : "Missing Filehash"}'
 
-#----# Run #----#
+@app.route("/message=<Message>", methods=["GET", "POST"]) 
+def message(Message):
+    keys = list(request.args.keys())
+    if 'Signature' and 'Signer' not in keys:
+        return '{"error" : 1, "error_text":"Missing Signature and/or Signer"}'
+    signature   =   '+'.join(request.args['Signature'].split(' '))
+    signer  =   request.args['Signer']
+    if Message is not None:
+        message = Message
+        result =  verusverify(message, signer, signature, 'verifymessage', rpcid='verifymessage')['result']
+        if result:
+            return '{"valid" : true}'
+        else:
+            return '{"valid" : false}'
+    else:
+        return '{"error" : 2, error_text : "Missing Message"}'
+
+@app.route("/getid=<verusid>", methods=["GET", "POST"])
+def getid(verusid):
+    return str(verusidentity(verusid))
+    
+
+
+
+#-----# Run #-----#
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run()
