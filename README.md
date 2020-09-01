@@ -13,7 +13,7 @@ Simple API to verify messages, files, or filehashes with Verus. WIP.
 http://localhost:5000/message=This is a test message?Signer=jbsci@&Signature=Af+4EQABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM
 ```
 
-### Inputs
+### Input/Output
 
 ```
 In: /message=<message>?Signer=<Signer>&Signature=<Signature>
