@@ -10,18 +10,22 @@ Simple API to verify messages, files, or filehashes with Verus. WIP.
 ### Basic Usage
 
 ```
-http://localhost:5000/message=This is a test message?Signer=jbsci@&Signature=Af+4EQABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM
+http://localhost:5000/verifymessage/?message=This is a test message&signer=jbsci@&signature=Af+4EQABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM
 ```
 
 ### Input/Output
 
 ```
-In: /message=<message>?Signer=<Signer>&Signature=<Signature>
+In: /verifymessage/?message=<message>&signer=<signer>&signature=<signature>
 out: { valid : true|false }
 
-In: /filehash=<filehash>?Signer=<Signer>&Signature=<Signature>
+In: /verifyhash/?hash=<filehash>&signer=<signer>&signature=<signature>
 out: { valid : true|false }
 
-In: /getid=<identity>
+In: /getid/?id=<identity>
 out: verbose identity information
 ```
+
+### Notes:
+
+1. Messsages need to be properly URL encoded before being passed to API.

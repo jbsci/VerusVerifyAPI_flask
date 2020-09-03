@@ -9,7 +9,7 @@ Basic Functionality:
 
     example:
 
-    localhost:5000/message=This is a test message?Signer=jbsci@&Signature=Af+4EQABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM
+    localhost:5000/verifymessage/?message=This is a test message&signer=jbsci@&signature=Af+4EQABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM
     
 
 Requires verusrpc.py, needs some setup for where to locate the rpc information before running
@@ -49,43 +49,50 @@ def verusidentity(identity):
 
 #----# API #----#
 
-@app.route("/filehash=<FileHash>", methods=["GET", "POST"]) 
-def filehash(FileHash):
+@app.route("/verifyhash/", methods=["GET", "POST"]) 
+def filehash():
     keys = list(request.args.keys())
-    if 'Signature' and 'Signer' not in keys:
-        return '{"error" : 1, "error_text":"Missing Signature and/or Signer"}'
-    signature   =   '+'.join(request.args['Signature'].split(' '))
-    signer  =   request.args['Signer']
-    if FileHash is not None:
-        fh = FileHash
+    if 'hash' not in keys:
+        return '{"error" : 2, "error_detail" : "No filehash specified"}'
+    elif 'signature' and 'signer' not in keys:
+        return '{"error" : 1, "error_text":"Missing signature and/or signer"}'
+    signature   =   '+'.join(request.args['signature'].split(' '))
+    signer  =   request.args['signer']
+    fh = request.args['hash']
+    if fh is not None:
         result = verusverify(fh, signer, signature, 'verifyhash', rpcid='verifyhash')['result']
         if result:
             return '{"valid" : true}'
         else:
             return '{"valid" : false}'
     else:
-        return '{"error" : 2, error_text : "Missing Filehash"}'
+        return '{"error" : 2, "error_detail" : "No filehash specified"}'
 
-@app.route("/message=<Message>", methods=["GET", "POST"]) 
-def message(Message):
+@app.route("/verifymessage/", methods=["GET", "POST"]) 
+def message():
     keys = list(request.args.keys())
-    if 'Signature' and 'Signer' not in keys:
-        return '{"error" : 1, "error_text":"Missing Signature and/or Signer"}'
-    signature   =   '+'.join(request.args['Signature'].split(' '))
-    signer  =   request.args['Signer']
-    if Message is not None:
-        message = Message
+    if 'message' not in keys:
+        return '{"error" : 2, "error_detail" : "No message specified"}'
+    elif 'signature' and 'signer' not in keys:
+        return '{"error" : 1, "error_text":"Missing signature and/or signer"}'
+    signature   =   '+'.join(request.args['signature'].split(' '))
+    signer  =   request.args['signer']
+    message = request.args['message']
+    if message is not None:
         result =  verusverify(message, signer, signature, 'verifymessage', rpcid='verifymessage')['result']
         if result:
             return '{"valid" : true}'
         else:
             return '{"valid" : false}'
     else:
-        return '{"error" : 2, error_text : "Missing Message"}'
+        return '{"error" : 2, "error_detail" : "No message specified"}'
 
-@app.route("/getid=<verusid>", methods=["GET", "POST"])
-def getid(verusid):
-    return str(verusidentity(verusid))
+@app.route("/getid/", methods=["GET", "POST"])
+def getid():
+    if request.args['id'] is None:
+        return '{"error" : 2, "error_detail" : "No identity specified"}'
+    else:
+        return str(verusidentity(request.args['id']))
     
 
 
