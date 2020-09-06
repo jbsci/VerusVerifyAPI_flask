@@ -2,10 +2,20 @@
 
 Simple API to verify messages, files, or filehashes with Verus. WIP.
 
+### Dependencies
+
+0. Python 3
+1. requests
+2. Flask
+3. Flask-API
+
 ### Setup
 
-1. Edit ```verusrpc.py``` to either include the path to your config file with RPC auth info or add custom auth info via a dictionary
-2. run ```./verusverifyapi.py.``` Defaults to localhost:5000
+1. Edit ```verusrpc.py``` to specify host information and either include the path to your VRSC.conf file or add RPC information via a dictionary:
+```
+confdict = { "rpcuser" : "$rpcuser", "rpcpassword" : "$rpcpassword", "rpcport" : $port }
+```
+2. run ```./verusverifyapi.py.```
 
 ### Basic Usage
 
@@ -23,7 +33,7 @@ In: /verifyhash/?hash=<filehash>&signer=<signer>&signature=<signature>
 out: { valid : true|false }
 
 In: /getid/?id=<identity>
-out: verbose identity information
+out: Identity information
 ```
 
 ### Notes:
