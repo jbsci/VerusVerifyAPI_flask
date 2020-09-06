@@ -1,28 +1,24 @@
 #!/usr/bin/env python
 
 '''
-Written 2020 by Jonathan Barnes <jonathan@jbsci.org>
-
 Basic Functionality:
 
-    localhost:5000/$query=$queryinfo?Signer=$signer&Signature=$signature
+    $host/$querytype/?$query=$queryinput&signer=$signer&signature=$signature
 
     example:
 
-    localhost:5000/verifymessage/?message=This is a test message&signer=jbsci@&signature=Af+4EQABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM
+    $host/verifymessage/?message=This is a test message&signer=jbsci@&signature=Af+4EQABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM
     
 
-Requires verusrpc.py, needs some setup for where to locate the rpc information before running
+Requires verusrpc.py (included in this repo) which needs configured for RPC authentication and host information.
+
+Written 2020 by Jonathan Barnes <j@jbsci.dev>
 '''
 
 #-# Imports #-#
 
-import os,sys
-import socket
-import json
 import verusrpc as vrpc
-from flask import Flask, request, url_for
-from urllib.parse import unquote
+from flask import Flask, request
 from flask_api import FlaskAPI, status, exceptions 
 
 #--# Definitions #--#
@@ -41,7 +37,9 @@ def verusverify(thing_to_verify, signer, signature, method, rpcid):
 
 def verusidentity(identity):
     '''
-    Queries RPC to check if identity exists and returns information
+    Queries RPC to check if identity exists and returns information. 
+
+    Can use identity or identity address.
     '''
     result = vrpc.verusquery("getidentity", [identity], rpcid="getidentity")
     return result
@@ -49,7 +47,7 @@ def verusidentity(identity):
 
 #----# API #----#
 
-@app.route("/verifyhash/", methods=["GET", "POST"]) 
+@app.route("/verifyhash/", methods=["GET"]) 
 def filehash():
     keys = list(request.args.keys())
     if 'hash' not in keys:
@@ -68,7 +66,7 @@ def filehash():
     else:
         return '{"error" : 2, "error_detail" : "No filehash specified"}'
 
-@app.route("/verifymessage/", methods=["GET", "POST"]) 
+@app.route("/verifymessage/", methods=["GET"]) 
 def message():
     keys = list(request.args.keys())
     if 'message' not in keys:
@@ -87,7 +85,7 @@ def message():
     else:
         return '{"error" : 2, "error_detail" : "No message specified"}'
 
-@app.route("/getid/", methods=["GET", "POST"])
+@app.route("/getid/", methods=["GET"]) 
 def getid():
     if request.args['id'] is None:
         return '{"error" : 2, "error_detail" : "No identity specified"}'
