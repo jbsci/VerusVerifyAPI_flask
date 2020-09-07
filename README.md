@@ -20,7 +20,7 @@ confdict = { "rpcuser" : "$rpcuser", "rpcpassword" : "$rpcpassword", "rpcport" :
 ### Basic Usage
 
 ```
-http://localhost:5000/verifymessage/?message=This is a test message&signer=jbsci@&signature=Af+4EQABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM
+http://localhost:5000/verifymessage/?message=This%20is%20a%20test%20message&signer=jbsci@&signature=Af+4EQABQSA1qs5h3yc553W8ulMVU+cVhJgXnkXHeZyEvP7oX9Iiizq3LIY1kWCyrWromhRv7CO1mdViKffFd6jGku0SiCSM
 ```
 
 ### Input/Output
