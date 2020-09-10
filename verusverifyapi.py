@@ -42,6 +42,8 @@ def verusidentity(identity):
     Can use identity or identity address.
     '''
     result = vrpc.verusquery("getidentity", [identity], rpcid="getidentity")
+    del result['result']['cansignfor']
+    del result['result']['canspendfor']
     return result
 
 
