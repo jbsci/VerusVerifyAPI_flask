@@ -51,46 +51,46 @@ def verusidentity(identity):
 def filehash():
     keys = list(request.args.keys())
     if 'hash' not in keys:
-        return '{"error" : 2, "error_detail" : "No filehash specified"}'
+        return {"error" : 2, "error_detail" : "No filehash specified"},400
     elif 'signature' and 'signer' not in keys:
-        return '{"error" : 1, "error_text":"Missing signature and/or signer"}'
+        return {"error" : 1, "error_text":"Missing signature and/or signer"},400
     signature   =   '+'.join(request.args['signature'].split(' '))
     signer  =   request.args['signer']
     fh = request.args['hash']
     if fh is not None:
         result = verusverify(fh, signer, signature, 'verifyhash', rpcid='verifyhash')['result']
         if result:
-            return '{"valid" : true}'
+            return {"valid" : "true"}
         else:
-            return '{"valid" : false}'
+            return {"valid" : "false"}
     else:
-        return '{"error" : 2, "error_detail" : "No filehash specified"}'
+        return {"error" : 2, "error_detail" : "No filehash specified"}
 
 @app.route("/verifymessage/", methods=["GET"]) 
 def message():
     keys = list(request.args.keys())
     if 'message' not in keys:
-        return '{"error" : 2, "error_detail" : "No message specified"}'
+        return {"error" : 2, "error_detail" : "No message specified"},400
     elif 'signature' and 'signer' not in keys:
-        return '{"error" : 1, "error_text":"Missing signature and/or signer"}'
+        return {"error" : 1, "error_text":"Missing signature and/or signer"},400
     signature   =   '+'.join(request.args['signature'].split(' '))
     signer  =   request.args['signer']
     message = request.args['message']
     if message is not None:
         result =  verusverify(message, signer, signature, 'verifymessage', rpcid='verifymessage')['result']
         if result:
-            return '{"valid" : true}'
+            return {"valid" : "true"}
         else:
-            return '{"valid" : false}'
+            return {"valid" : "false"}
     else:
-        return '{"error" : 2, "error_detail" : "No message specified"}'
+        return {"error" : 2, "error_detail" : "No message specified"}
 
 @app.route("/getid/", methods=["GET"]) 
 def getid():
     if request.args['id'] is None:
-        return '{"error" : 2, "error_detail" : "No identity specified"}'
+        return {"error" : 2, "error_detail" : "No identity specified"},400
     else:
-        return str(verusidentity(request.args['id']))
+        return verusidentity(request.args['id'])
     
 
 
