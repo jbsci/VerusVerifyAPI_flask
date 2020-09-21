@@ -17,6 +17,7 @@ Written 2020 by Jonathan Barnes <j@jbsci.dev>
 
 #-# Imports #-#
 
+import sys
 import verusrpc as vrpc
 from flask import Flask, request
 from flask_api import FlaskAPI, status, exceptions 
@@ -54,7 +55,11 @@ class readconfig:
                     self.sslcrt = inval
 
 apiconf = readconfig()
+
+
 if apiconf.ssl:
+    if apiconf.sslkey == 'none' or apiconf.sslcrt == 'none':
+        sys.exit('ERROR: SSL enabled but no key or cert specified')
     context = (apiconf.sslcrt, apiconf.sslkey)
     sslify = SSLify(app)
 

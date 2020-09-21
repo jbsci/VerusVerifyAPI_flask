@@ -11,6 +11,7 @@ Written 2020 by Jonathan Barnes <j@jbsci.dev>
 
 #-# imports #-#
 
+import sys
 import requests
 import ast
 from requests.auth import HTTPBasicAuth
@@ -31,6 +32,8 @@ class readconfig:
                     if inparam  == 'rpcconf':
                         if inval[0] == "{" and inval[-1] == "}":
                             self.rpcconf = ast.literal_eval(inval)
+                        elif inval == 'none':
+                            sys.exit('ERROR: Please specify an rpc config file or path to config file in rpc_api.conf')
                         else:
                             self.rpcconf = inval
                     elif inparam == 'rpchost':
