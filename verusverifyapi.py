@@ -22,6 +22,7 @@ import verusrpc as vrpc
 from flask import Flask, request
 from flask_api import FlaskAPI, status, exceptions 
 from flask_sslify import SSLify
+from flask_talisman import Talisman
 
 
 #--# Definitions #--#
@@ -58,6 +59,7 @@ apiconf = readconfig()
 
 
 if apiconf.ssl:
+    Talisman(app)
     if apiconf.sslkey == 'none' or apiconf.sslcrt == 'none':
         sys.exit('ERROR: SSL enabled but no key or cert specified')
     context = (apiconf.sslcrt, apiconf.sslkey)
