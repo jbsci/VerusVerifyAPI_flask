@@ -12,6 +12,7 @@ Written 2020 by Jonathan Barnes <j@jbsci.dev>
 #-# imports #-#
 
 import requests
+import ast
 from requests.auth import HTTPBasicAuth
 
 #--# Configuration #--#
