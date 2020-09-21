@@ -12,14 +12,24 @@ Simple API to verify messages, files, or filehashes with Verus. WIP.
 5. ast
 
 ### Setup
+All configuration is handled in the ```rpc_api.conf``` file. There are two sections for configuring both the RPC information and the specifications for the API. The configuration options are as follows:
 
-1. Edit ```rpc_api.conf``` to specify parameters for the rpc client and the API. For the RPC configuration, either include the path to VRSC.conf or include the information in a dictionary like so:
+#### RPC Configuration
+
+1. ```rpchost``` Specifies the hostname for the RPC server
+2. ```rpcconf``` Specifies the configuration information for the RPC server, namely the port, username and password. This can either be given as the path to a configuration file, like VRSC.conf, or as a dictionary formatted like so:
 ```
 confdict = { "rpcuser" : "$rpcuser", "rpcpassword" : "$rpcpassword", "rpcport" : $port }
 ```
-2. If you wish to enable native SSL to avoid using a proxy/server like nginx, set ```SSL = yes``` and specify the locations for the key and certificate in ```rpc_api.conf```
-3. Set any other desired parameter changes like the hostname or port. 
-4. run ```./verusverifyapi.py.```
+
+#### API Configuration
+1. ```apiport``` specifies the port you want the API to run on, defaults to 5000. 
+2. ```apihost``` Specifies the host for the API, defaults to localhost. Set to 0.0.0.0 to be accessible from a network without a proxy/server. 
+3. ```SSL``` Toggles native ssl via yes|no, if yes, then you need to also specify the key and sertificates
+4. ```SSL_KEY``` and ```SSL_CRT``` specify the path/name for the SSL key and certificate respectively. 
+
+#### Running the API
+After setup, just run ```./verusverifyapi.py```
 
 ### Basic Usage
 
