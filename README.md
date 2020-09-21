@@ -17,7 +17,7 @@ Simple API to verify messages, files, or filehashes with Verus. WIP.
 ```
 confdict = { "rpcuser" : "$rpcuser", "rpcpassword" : "$rpcpassword", "rpcport" : $port }
 ```
-2. If you wish to enable native SSL to avoid using a proxy/server like nginx, set SSL to 'yes' and specify the location for the key and certificate in ```rpc_api.conf```
+2. If you wish to enable native SSL to avoid using a proxy/server like nginx, set ```SSL = yes``` and specify the locations for the key and certificate in ```rpc_api.conf```
 3. Set any other desired parameter changes like the hostname or port. 
 4. run ```./verusverifyapi.py.```
 
