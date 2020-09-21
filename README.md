@@ -8,14 +8,18 @@ Simple API to verify messages, files, or filehashes with Verus. WIP.
 1. requests
 2. Flask
 3. Flask-API
+4. flask_sslify
+5. ast
 
 ### Setup
 
-1. Edit ```verusrpc.py``` to specify host information and either include the path to your VRSC.conf file or add RPC information via a dictionary:
+1. Edit ```rpc_api.conf``` to specify parameters for the rpc client and the API. For the RPC configuration, either include the path to VRSC.conf or include the information in a dictionary like so:
 ```
 confdict = { "rpcuser" : "$rpcuser", "rpcpassword" : "$rpcpassword", "rpcport" : $port }
 ```
-2. run ```./verusverifyapi.py.```
+2. If you wish to enable native SSL to avoid using a proxy/server like nginx, set SSL to 'yes' and specify the location for the key and certificate in ```rpc_api.conf```
+3. Set any other desired parameter changes like the hostname or port. 
+4. run ```./verusverifyapi.py.```
 
 ### Basic Usage
 
