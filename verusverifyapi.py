@@ -92,6 +92,17 @@ def verusidentity(identity):
 
 #-----# API #-----#
 
+@app.route("/")
+def index():
+    return """
+    <h1>Welcome to the verus verify API</h1>
+    <p> Messages: </p> <code> /verifymessage/?message=[message]&signer=[signer]&signature=[signature] </code> <br>
+    <p> Hashes: </p> <code> /verifyhash/?hash=[hash]&signer=[signer]&signature=[signature] </code> <br>
+    <p> Identity information: </p> <code> /getid/?id=[identity] </code>
+    """
+
+
+
 @app.route("/verifyhash/", methods=["GET"]) 
 def filehash():
     keys = list(request.args.keys())
