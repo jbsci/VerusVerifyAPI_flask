@@ -24,7 +24,6 @@ from flask_api import FlaskAPI, status, exceptions
 from flask_sslify import SSLify
 from flask_talisman import Talisman
 
-
 #--# Definitions #--#
 
 app = FlaskAPI(__name__)
@@ -56,7 +55,6 @@ class readconfig:
                     self.sslcrt = inval
 
 apiconf = readconfig()
-
 
 if apiconf.ssl:
     Talisman(app)
@@ -100,8 +98,6 @@ def index():
     <p> Hashes: </p> <code> /verifyhash/?hash=[hash]&signer=[signer]&signature=[signature] </code> <br>
     <p> Identity information: </p> <code> /getid/?id=[identity] </code>
     """
-
-
 
 @app.route("/verifyhash/", methods=["GET"]) 
 def filehash():
@@ -147,9 +143,6 @@ def getid():
         return {"error" : 2, "error_detail" : "No identity specified"},400
     else:
         return verusidentity(request.args['id'])
-    
-
-
 
 #------# Run #------#
 
