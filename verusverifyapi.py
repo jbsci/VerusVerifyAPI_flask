@@ -109,14 +109,16 @@ def filehash():
     signature   =   '+'.join(request.args['signature'].split(' '))
     signer  =   request.args['signer']
     fh = request.args['hash']
-    if fh is not None:
+    if len(signature) == 0 or len(signer) == 0:
+        return {"error" : 1, "error_text":"Missing signature and/or signer"},400
+    if fh is not None and len(fh) != 0:
         result = verusverify(fh, signer, signature, 'verifyhash', rpcid='verifyhash')['result']
         if result:
             return {"valid" : "true"}
         else:
             return {"valid" : "false"}
     else:
-        return {"error" : 2, "error_detail" : "No filehash specified"}
+        return {"error" : 2, "error_detail" : "No hash specified"}
 
 @app.route("/verifymessage/", methods=["GET"]) 
 def message():
@@ -128,7 +130,9 @@ def message():
     signature   =   '+'.join(request.args['signature'].split(' '))
     signer  =   request.args['signer']
     message = request.args['message']
-    if message is not None:
+    if len(signature) == 0 or len(signer) == 0:
+        return {"error" : 1, "error_text":"Missing signature and/or signer"},400
+    if message is not None and len(message) > 0:
         result =  verusverify(message, signer, signature, 'verifymessage', rpcid='verifymessage')['result']
         if result:
             return {"valid" : "true"}
@@ -139,7 +143,7 @@ def message():
 
 @app.route("/getid/", methods=["GET"]) 
 def getid():
-    if request.args['id'] is None:
+    if request.args['id'] is None or len(request.args['id']) == 0:
         return {"error" : 2, "error_detail" : "No identity specified"},400
     else:
         return verusidentity(request.args['id'])
